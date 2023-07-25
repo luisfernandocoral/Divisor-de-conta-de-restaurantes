@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Divisor de Conta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label, input, textarea {
+            display: block;
+            margin-top: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 5px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Divisor de Conta</h1>
+
+    <div id="input-section">
+        <label for="clientes">Clientes:</label>
+        <textarea id="clientes" placeholder="Digite os nomes dos clientes separados por vírgula"></textarea>
+
+        <label for="produtos">Produtos:</label>
+        <textarea id="produtos" placeholder="Digite os produtos separados por vírgula"></textarea>
+
+        <button onclick="calcularDivisaoConta()">Calcular</button>
+    </div>
+
+    <table id="resultado"></table>
+
+    <script>
+        function calcularDivisaoConta() {
+            const clientesInput = document.getElementById("clientes");
+            const produtosInput = document.getElementById("produtos");
+            const resultadoTable = document.getElementById("resultado");
+
+            resultadoTable.innerHTML = "";
+
+            const clientes = clientesInput.value.split(",");
+            const produtos = produtosInput.value.split(",");
+
+            const totalPorCliente = {};
+
+            produtos.forEach(produto => {
+                const consumidores = clientes.filter(cliente => produto.includes(cliente.trim()));
+
+                const valorPorCliente = (1 / consumidores.length * 100).toFixed(2);
+
+                consumidores.forEach(consumidor => {
+                    totalPorCliente[consumidor] = (totalPorCliente[consumidor] || 0) + Number(valorPorCliente);
+                });
+            });
+
+            Object.entries(totalPorCliente).forEach(([cliente, total]) => {
+                const row = `<tr><td>${cliente}</td><td>R$ ${(total * 1.1).toFixed(2)}</td></tr>`;
+                resultadoTable.innerHTML += row;
+            });
+
+            resultadoTable.style.display = "table";
+        }
+    </script>
+</body>
+</html>
